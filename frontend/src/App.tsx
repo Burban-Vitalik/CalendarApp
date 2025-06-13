@@ -2,20 +2,22 @@ import { useState, useCallback } from 'react'
 import { css } from '@emotion/react'
 import Calendar from './components/Calendar.tsx'
 import SearchBar from './components/SearchBar.tsx'
+import AuthContainer from './components/Auth/AuthContainer.tsx'
 import { Task } from './types.ts'
 
 const appStyles = css`
   min-height: 100vh;
   background: #f8fafc;
-  padding: 2rem;
 `
 
 const contentStyles = css`
   max-width: 1400px;
   margin: 0 auto;
+  padding: 2rem;
 `
 
 function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [tasks, setTasks] = useState<Task[]>([])
   const [searchQuery, setSearchQuery] = useState('')
 
@@ -42,10 +44,13 @@ function App() {
     task.description?.toLowerCase().includes(searchQuery.toLowerCase())
   )
 
+  if (!isAuthenticated) {
+    return <AuthContainer />
+  }
+
   return (
     <div css={appStyles}>
       <div css={contentStyles}>
-        
         <SearchBar 
           value={searchQuery}
           onChange={setSearchQuery}
